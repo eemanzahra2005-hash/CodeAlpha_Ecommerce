@@ -1,0 +1,108 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, sans-serif;
+}
+
+nav{
+    background-color: black;
+    color: white;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px;
+
+    flex-wrap: wrap;
+}
+nav h1{
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+nav ul{
+    display: flex;
+    list-style: none;
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+.hero{
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.hero h2{
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.hero p{
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.hero button{
+    padding: 12px 25px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.products{
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.products h2{
+    font-size: 40px;
+    margin-bottom: 40px;
+}
+
+.product-container{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.product-card{
+    background-color: white;
+    padding: 20px;
+
+    width: 250px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.product-card img{
+    width: 100%;
+}
+
+.product-card h3{
+    margin: 15px 0;
+}
+
+.product-card p{
+    margin-bottom: 15px;
+}
+
+.product-card button{
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.product-card button:hover{
+    background-color: orange;
+}
