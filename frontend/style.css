@@ -1,3 +1,6 @@
+html{
+    scroll-behavior:smooth;
+}
 *{
     margin:0;
     padding:0;
@@ -18,6 +21,9 @@ nav{
     justify-content:space-between;
     align-items:center;
     padding:20px 40px;
+    position:sticky;
+top:0;
+z-index:1000;
 }
 
 nav ul{
@@ -41,7 +47,7 @@ nav a{
 }
 
 .hero h2{
-    font-size:60px;
+    font-size:clamp(40px,8vw,70px);
     margin-bottom:20px;
 }
 
@@ -150,6 +156,7 @@ nav a:hover{
 }
 .product-card{
     transition:0.3s;
+    overflow:hidden;
 }
 
 .product-card:hover{
@@ -157,9 +164,30 @@ nav a:hover{
 }
 button{
     transition:0.3s;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
-button:hover{
-    background:rgb(194, 38, 132);
+
+ button:hover{
+    background:orange;
     color:black;
+    transform:scale(1.05);
+}
+.product-card img{
+    transition:0.3s;
+}
+
+.product-card:hover img{
+    transform:scale(1.05);
+}
+#cart-count{
+    background:red;
+    color:white;
+    padding:4px 10px;
+    border-radius:50%;
+    font-size:14px;
+    margin-left:5px;
+}
+.products{
+    background:#f8f8f8;
 }
