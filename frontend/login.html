@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CodeAlpha Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav>
+        <h1>CodeAlpha Store</h1>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html">Products</a></li>
+            <li id="auth-nav-item"><a href="login.html">Login</a></li>
+            <li class="cart-icon-container">
+                <a href="cart.html" class="cart-icon">🛒</a>
+                <span id="cart-badge" class="cart-badge">0</span>
+            </li>
+        </ul>
+    </nav>
+
+    <section class="auth-page">
+        <div class="auth-card">
+
+            <div class="auth-header">
+                <h1>Welcome Back</h1>
+                <p>Login to your CodeAlpha account</p>
+            </div>
+
+            <div id="error-banner" class="error-banner" style="display:none;"></div>
+
+            <form id="login-form" class="auth-form" novalidate>
+
+                <div class="input-group">
+                    <span class="input-icon">✉</span>
+                    <input type="email" id="email" placeholder="Email address" required autocomplete="email">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
+                    <button type="button" class="eye-toggle" id="eye-toggle" aria-label="Toggle password visibility">👁</button>
+                </div>
+
+                <button type="submit" id="login-btn" class="auth-btn">
+                    <span class="btn-spinner" style="display:none;"></span>
+                    <span class="btn-text">Login</span>
+                </button>
+
+            </form>
+
+            <p class="auth-switch">Don't have an account? <a href="signup.html">Sign up here</a></p>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 CodeAlpha Store. All Rights Reserved.</p>
+    </footer>
+
+    <script src="auth.js"></script>
+
+</body>
+</html>
