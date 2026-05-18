@@ -1,25 +1,29 @@
+// Express backend server: handles API routes for products, signup, login, and logout
 const express = require("express");
 const cors = require("cors");
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
 const app = express();
+// Allows the frontend (any origin) to make requests to this backend
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
+// Connects to Supabase cloud database using secret keys stored in the .env file
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 app.get("/", (req, res) => {
     res.send("Backend Running Successfully");
 });
 
+// Fetches all products from the Supabase database and sends them to the frontend
 app.get("/products", async (req, res) => {
     const { data, error } = await supabase.from("products").select("*");
     if (error) return res.status(500).json({ error: error.message });
     res.json(data);
 });
 
-// POST /signup
+// Creates a new user account in Supabase Auth with their email and password
 app.post("/signup", async (req, res) => {
     const { email, password, fullName } = req.body;
 
@@ -54,7 +58,7 @@ app.post("/signup", async (req, res) => {
     });
 });
 
-// POST /login
+// Verifies email and password, returns a JWT token if credentials are correct
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
@@ -84,7 +88,7 @@ app.post("/login", async (req, res) => {
     });
 });
 
-// POST /logout
+// Invalidates the user's Supabase session so their token can no longer be used
 app.post("/logout", async (req, res) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -97,7 +101,7 @@ app.post("/logout", async (req, res) => {
     res.json({ message: "Logged out successfully." });
 });
 
-// GET /me
+// Returns the logged-in user's info by verifying their token from the request header
 app.get("/me", async (req, res) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -120,6 +124,7 @@ app.get("/me", async (req, res) => {
     });
 });
 
+// Starts the server and listens for incoming HTTP requests on port 5000
 app.listen(process.env.PORT || 5000, () => {
     console.log("Server running on port 5000");
 });

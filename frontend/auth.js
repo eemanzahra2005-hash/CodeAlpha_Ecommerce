@@ -1,3 +1,4 @@
+// Handles login, signup, logout, and updates the navbar based on whether the user is logged in
 const API_BASE = "http://localhost:5000";
 
 // ─── Cart badge ───────────────────────────────────────────────────────────────
@@ -10,7 +11,7 @@ const API_BASE = "http://localhost:5000";
     } catch {}
 })();
 
-// ─── Logout ───────────────────────────────────────────────────────────────────
+// Calls the backend to end the session, clears user data from localStorage, and redirects to home
 function handleLogout() {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
     fetch(`${API_BASE}/logout`, {
@@ -22,7 +23,7 @@ function handleLogout() {
     });
 }
 
-// ─── Navbar auth state ────────────────────────────────────────────────────────
+// Checks localStorage for a logged-in user and updates the navbar to show their name or a Login link
 (function checkAuthNav() {
     const authNavItem = document.getElementById("auth-nav-item");
     if (!authNavItem) return;
@@ -118,6 +119,7 @@ if (loginForm) {
         input.addEventListener("input", hideError);
     });
 
+    // Sends email and password to the backend; on success saves the token and redirects to home
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         hideError();
@@ -228,6 +230,7 @@ if (signupForm) {
         confirmStatus.style.color = match ? "#22c55e" : "#ef4444";
     });
 
+    // Validates all fields, then sends signup data to backend; redirects to home if a token is returned
     signupForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         hideError();

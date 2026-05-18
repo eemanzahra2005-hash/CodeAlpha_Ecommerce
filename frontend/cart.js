@@ -1,3 +1,4 @@
+// Cart page script: reads cart from localStorage and handles quantity updates and item removal
 document.addEventListener("DOMContentLoaded", () => {
     const cartContent = document.getElementById("cart-content");
     const emptyCartMessage = document.getElementById("empty-cart-message");
@@ -11,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const STORAGE_KEY = "cart";
     let cart = loadCart();
 
+    // Reads cart items saved in localStorage; returns empty array if nothing is stored
     function loadCart() {
         try {
             const stored = localStorage.getItem(STORAGE_KEY);
@@ -29,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (cartBadge) cartBadge.textContent = total;
     }
 
+    // Calculates and displays subtotal, 10% tax, and grand total from all cart items
     function updateTotals() {
         const subtotal = cart.reduce((s, i) => s + i.price * (i.quantity || 1), 0);
         const tax = subtotal * 0.1;
@@ -69,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return card;
     }
 
+    // Increases or decreases an item's quantity; removes it automatically if quantity drops to zero
     function changeQty(itemId, delta, card) {
         const item = cart.find(i => i.id === itemId);
         if (!item) return;
@@ -85,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateTotals();
     }
 
+    // Removes item from cart with a slide-out animation, then saves the updated cart
     function animateRemove(itemId, card) {
         card.classList.add("removing");
         card.addEventListener("animationend", () => {

@@ -1,3 +1,4 @@
+// Home page script: loads products from the backend and manages adding items to the cart
 document.addEventListener("DOMContentLoaded", () => {
     const productContainer = document.getElementById("product-container");
     const cartBadge = document.getElementById("cart-badge");
@@ -26,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Shows a popup notification that slides in and auto-disappears after 2.5 seconds
     const showToast = (message) => {
         const toast = document.createElement("div");
         toast.style.cssText = `
@@ -54,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Cart display only on cart.html, not on home page
     };
 
+    // Adds a product to the cart array; if it already exists, increases its quantity instead
     const addToCart = (product) => {
         const existingItem = cart.find(item => item.id === product.id);
 
@@ -81,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         Phone: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400"
     };
 
+    // Builds and returns a product card element with image, name, price, and add-to-cart button
     const createProductCard = (product, index) => {
         const card = document.createElement("div");
         card.classList.add("product-card");
@@ -113,14 +117,24 @@ document.addEventListener("DOMContentLoaded", () => {
         return card;
     };
 
-    const showProductError = (message) => {
+    const showProductError = (message, showRetry = false) => {
         productContainer.innerHTML = "";
-        const errorMessage = document.createElement("div");
-        errorMessage.classList.add("product-error");
-        errorMessage.innerText = message;
-        productContainer.appendChild(errorMessage);
+        const errorBox = document.createElement("div");
+        errorBox.classList.add("product-error");
+        const text = document.createElement("p");
+        text.innerText = message;
+        errorBox.appendChild(text);
+        if (showRetry) {
+            const retryBtn = document.createElement("button");
+            retryBtn.classList.add("product-retry-btn");
+            retryBtn.innerText = "Retry";
+            retryBtn.addEventListener("click", () => loadProducts());
+            errorBox.appendChild(retryBtn);
+        }
+        productContainer.appendChild(errorBox);
     };
 
+    // Fetches all products from the backend API and renders them on the page
     const loadProducts = async () => {
         productContainer.innerHTML = "";
         const loadingMessage = document.createElement("div");
@@ -128,34 +142,50 @@ document.addEventListener("DOMContentLoaded", () => {
         loadingMessage.innerText = "Loading products...";
         productContainer.appendChild(loadingMessage);
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
         try {
             console.log("Fetching products from http://localhost:5000/products");
-            const response = await fetch("http://localhost:5000/products");
+            const response = await fetch("http://localhost:5000/products", {
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
             console.log("Fetch response status:", response.status, response.ok);
-            
+
             if (!response.ok) {
-                throw new Error(`Server responded with ${response.status}`);
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.error || `Server error ${response.status}`);
             }
+
             const products = await response.json();
             console.log("Products received from API:", products);
 
             if (!Array.isArray(products) || products.length === 0) {
-                console.warn("No products available or invalid format");
-                showProductError("No products are available at the moment.");
+                console.warn("No products in database");
+                showProductError("No products are available yet. The database may be empty.", false);
                 return;
             }
 
-            console.log(`Rendering ${products.length} products`);
             productContainer.innerHTML = "";
             products.forEach((product, index) => {
-                console.log(`Creating card for product ${index}:`, product.name);
                 productContainer.appendChild(createProductCard(product, index));
             });
-            console.log("Products rendered successfully");
+            console.log(`Rendered ${products.length} products successfully`);
         } catch (error) {
-            console.error("Error loading products:", error);
-            console.error("Error details:", error.message);
-            showProductError("Unable to load products. Please try again later.");
+            clearTimeout(timeoutId);
+            let msg;
+            if (error.name === "AbortError") {
+                msg = "Request timed out after 10s. Is the backend running on port 5000?";
+                console.error("Fetch timed out — backend may be hung or unreachable");
+            } else if (error.message === "Failed to fetch") {
+                msg = "Cannot reach backend on port 5000. Make sure the server is running.";
+                console.error("Network error — backend unreachable at localhost:5000");
+            } else {
+                msg = `Failed to load products: ${error.message}`;
+                console.error("Error loading products:", error.message);
+            }
+            showProductError(msg, true);
         }
     };
 
